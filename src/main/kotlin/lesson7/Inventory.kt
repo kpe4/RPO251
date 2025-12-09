@@ -5,13 +5,40 @@ class Inventory{
     // { ... } - в фигурных скобках вторичный
     // разница в том что первичн конструктор надо задать при объявлении объекта класса
 
-    val items: MutableList<Item> = mutableListOf()
+    private val items: MutableList<Item> = mutableListOf()
+    private val maxWeight: Int = 80
+
+    fun getCurrentWeight(): Int{
+        return items.sumOf{it.weight}
+    }
 
     fun addItem(item: Item){
+        val newWeight = getCurrentWeight() + item.weight
+
+        if (newWeight > maxWeight){
+            println("Cant add ${item.name}. Weight is previshen: $newWeight / $maxWeight")
+            return
+        }
         items.add(item)
         // .add метод списка который добавляет в конец списка объект
+        println("Added ${item.name}. Current weight $newWeight / $maxWeight")
+    }
 
-        println("Added ${item.name}")
+    fun findItemByName(name: String): Item? {
+        for (item in items){
+            if (item.name.equals(name, ignoreCase = true)){
+                return item
+            }
+        }
+        return null
+    }
+    fun findItemById(id: Int): Item? {
+        for (item in items) {
+            if (item.id == id){
+                return item
+            }
+        }
+        return null
     }
 
     fun removeItem(item: Item): Boolean{
@@ -19,7 +46,7 @@ class Inventory{
         val removed = items.remove(item)
         // .remove - удаляет одирн элем из списка по предм по списку который мы ищем (item)
         if (removed){
-            println("Removed ${item.name}")
+            println("Removed ${item.name}. Current weight ${getCurrentWeight()} / $maxWeight")
         }else{
             println("This item does not exist")
         }
@@ -39,6 +66,7 @@ class Inventory{
             }
 
             println("- ${item.name} | Price: ${item.price} | Description: ${item.description}")
+            println("Weight: ${getCurrentWeight()} / $maxWeight")
         }
     }
 }
